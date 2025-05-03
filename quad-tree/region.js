@@ -17,6 +17,17 @@ class Region {
   }
 
   /*
+   * Check if a position vector is inside the region
+   * @param {Vector} position: Position to check
+   * @return {boolean} result: true if the position vector is inside the region, false otherwise
+   */
+  contains(position) {
+    const d = p5.Vector.dist(position, this.center);
+    return (d < this.radius);
+  }
+
+
+  /*
    * Draws the region onto the canvas
    */
   draw() {

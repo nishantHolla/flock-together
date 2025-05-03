@@ -16,9 +16,10 @@ class Particle {
 
   /*
    * Draws the particle onto the canvas
+   * @param {boolean} highlight: Highlight the particle with COLOR_FOUND_POINT color
    */
-  draw() {
-    stroke(COLOR_POINT);
+  draw(highlight = false) {
+    stroke(highlight ? COLOR_FOUND_POINT : COLOR_POINT);
     strokeWeight(PARTICLE_SIZE);
     point(this.position.x, this.position.y);
   }

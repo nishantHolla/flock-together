@@ -2,6 +2,8 @@ let particles = [];
 let region;
 let regionIsDragged;
 let regionIsScaled;
+let quadTree;
+let rootBoundary;
 
 /*
  * P5JS function called once at the start
@@ -22,7 +24,18 @@ function setup() {
  * P5JS function called at each frame to draw the canvas
  */
 function draw() {
+  rootBoundary = new Boundary(createVector(width/2, height/2), width/2, height/2);
+  quadTree = new QuadTree(rootBoundary, QUAD_TREE_CAPACITY);
+
+  for (const particle of particles) {
+    quadTree.insert(particle);
+  }
+
   background(COLOR_CANVAS_BG);
+
+  quadTree.forEach((node) => {
+    node.boundary.draw();
+  })
 
   region.draw();
 
@@ -30,6 +43,11 @@ function draw() {
     particle.update();
     particle.wrapAround();
     particle.draw();
+  }
+
+  const found = quadTree.query(region);
+  for (const foundParticle of found) {
+    foundParticle.draw(true);
   }
 }
 
