@@ -4,6 +4,16 @@
 
 const DOM_CANVAS = document.querySelector("canvas");
 
+const DOM_ALIGNMENT_SLIDER = document.querySelector("#alignment-slider");
+const DOM_COHESION_SLIDER = document.querySelector("#cohesion-slider");
+const DOM_SEPARATION_SLIDER = document.querySelector("#separation-slider");
+const DOM_PARTICLE_SLIDER = document.querySelector("#particle-slider");
+
+const DOM_ALIGNMENT_VALUE = document.querySelector("#alignment-value");
+const DOM_COHESION_VALUE = document.querySelector("#cohesion-value");
+const DOM_SEPARATION_VALUE = document.querySelector("#separation-value");
+const DOM_PARTICLE_VALUE = document.querySelector("#particle-value");
+
 // ---------------------
 // Colors
 // ---------------------
@@ -31,7 +41,8 @@ const PERCEPTION_RADIUS = 50;
 const QUAD_TREE_CAPACITY = 4;
 
 const MAX_PARTICLE_SPEED = 2;
-const MAX_STEERING_FORCE = 0.1;
-const ALIGNMENT_VALUE = 1;
-const COHESION_VALUE = 1;
-const SEPARATION_VALUE = 1.4;
+const MAX_STEERING_FORCE = 0.05;
+let ALIGNMENT_VALUE = 1;
+let COHESION_VALUE = 1;
+let SEPARATION_VALUE = 1.5;
+let PARTICLE_COUNT = DEFAULT_PARTICLE_COUNT;

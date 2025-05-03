@@ -47,3 +47,12 @@ button {
 button:hover {
   cursor: pointer;
 }
+
+.links {
+  display: flex;
+  justify-content: space-between;
+}
+
+a {
+  color: #e2e8f0;
+}
