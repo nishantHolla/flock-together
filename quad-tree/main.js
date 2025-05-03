@@ -75,6 +75,10 @@ function mousePressed() {
   else if (Math.abs(d - region.radius) < 10) {
     regionIsScaled = true;
   }
+  else {
+    const mousePosition = createVector(mouseX, mouseY);
+    particles.push(new Particle(mousePosition));
+  }
 }
 
 /*
