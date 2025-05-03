@@ -23,17 +23,19 @@ class Particle {
     push();
     stroke(COLOR_CANVAS_FG);
     strokeWeight(PARTICLE_BORDER_THICKNESS);
+    fill(COLOR_CANVAS_FG);
 
     translate(this.position);
 
     const head = this.velocity.copy().setMag(PARTICLE_SIZE);
     const leftTail = head.copy().rotate(120 * DEG_TO_RAD);
+    const back = head.copy().mult(-1).setMag(PARTICLE_SIZE/4);
     const rightTail = head.copy().rotate(-120 * DEG_TO_RAD);
 
     beginShape();
     vertex(head.x, head.y);
     vertex(leftTail.x, leftTail.y);
-    vertex(0, 0);
+    vertex(back.x, back.y);
     vertex(rightTail.x, rightTail.y);
     endShape(CLOSE);
 
@@ -45,10 +47,21 @@ class Particle {
    */
   update(neighbors) {
     this.acceleration.set(0, 0);
-    this.acceleration.add(this.align(neighbors));
-    this.acceleration.add(this.cohesion(neighbors));
+
+    const alignment = this.align(neighbors);
+    const cohesion = this.cohesion(neighbors);
+    const separation = this.separation(neighbors);
+
+    alignment.mult(ALIGNMENT_VALUE);
+    cohesion.mult(COHESION_VALUE);
+    separation.mult(SEPARATION_VALUE);
+
+    this.acceleration.add(alignment);
+    this.acceleration.add(cohesion);
+    this.acceleration.add(separation);
 
     this.velocity.add(this.acceleration);
+    this.velocity.limit(MAX_PARTICLE_SPEED);
     this.position.add(this.velocity);
   }
 
@@ -59,13 +72,17 @@ class Particle {
    */
   align(neighbors) {
     const steeringForce = createVector(0, 0);
+    let total = 0;
 
     for (const particle of neighbors) {
-      steeringForce.add(particle.velocity);
+      if (particle != this) {
+        steeringForce.add(particle.velocity);
+        total++;
+      }
     }
 
-    if (neighbors.length > 0) {
-      steeringForce.div(neighbors.length);
+    if (total > 0) {
+      steeringForce.div(total);
       steeringForce.setMag(MAX_PARTICLE_SPEED);
       steeringForce.sub(this.velocity);
       steeringForce.limit(MAX_STEERING_FORCE);
@@ -76,19 +93,54 @@ class Particle {
 
   /*
    * Steer towards average position of a list of particles
-   * @param {Particles[]} neighbors: List of particles to align to
+   * @param {Particles[]} neighbors: List of particles to unite to
    * @return {Vector} steeringForce: Steering force required for the cohesion
    */
   cohesion(neighbors) {
     const steeringForce = createVector(0, 0);
+    let total = 0;
 
     for (const particle of neighbors) {
-      steeringForce.add(particle.position);
+      if (particle !== this) {
+        steeringForce.add(particle.position);
+        total++;
+      }
     }
 
-    if (neighbors.length > 0) {
-      steeringForce.div(neighbors.length);
+    if (total > 0) {
+      steeringForce.div(total);
       steeringForce.sub(this.position);
+      steeringForce.setMag(MAX_PARTICLE_SPEED);
+      steeringForce.sub(this.velocity);
+      steeringForce.limit(MAX_STEERING_FORCE);
+    }
+
+    return steeringForce;
+  }
+
+  /*
+   * Steer away to avoid crowding of list of particles
+   * @param {Particles[]} neighbors: List of particles to separate from
+   * @return {Vector} steeringForce: Steering force required for the separation
+   */
+  separation(neighbors) {
+    const steeringForce = createVector(0, 0);
+    let total = 0;
+
+    for (const particle of neighbors) {
+      if (particle !== this) {
+        const diff = p5.Vector.sub(this.position, particle.position);
+        const d = dist(this.position, particle.position);
+        if (d > 0) {
+          diff.div(d);
+        }
+        steeringForce.add(diff);
+        total++;
+      }
+    }
+
+    if (total > 0) {
+      steeringForce.div(total);
       steeringForce.setMag(MAX_PARTICLE_SPEED);
       steeringForce.sub(this.velocity);
       steeringForce.limit(MAX_STEERING_FORCE);
