@@ -27,7 +27,9 @@ function draw() {
   background(COLOR_CANVAS_BG);
 
   for (const particle of particles) {
-    particle.update();
+    const perceptionRegion = new Region(particle.position, PERCEPTION_RADIUS);
+    const neighbors = quadTree.query(perceptionRegion);
+    particle.update(neighbors);
     particle.wrapAround();
     particle.draw();
   }

@@ -43,9 +43,34 @@ class Particle {
   /*
    * Updates the particle for the current frame
    */
-  update() {
-    this.position.add(this.velocity);
+  update(neighbors) {
+    this.acceleration.set(0, 0);
+    this.acceleration.add(this.align(neighbors));
+
     this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+  }
+
+  /*
+   * Align current particles with respect to a list of particles
+   * @param {Particles[]} neighbors: List of particles to align to
+   * @return {Vector} steeringForce: Steering force required for the alignment
+   */
+  align(neighbors) {
+    const steeringForce = createVector(0, 0);
+
+    for (const particle of neighbors) {
+      steeringForce.add(particle.velocity);
+    }
+
+    if (neighbors.length > 0) {
+      steeringForce.div(neighbors.length);
+      steeringForce.setMag(MAX_PARTICLE_SPEED);
+      steeringForce.sub(this.velocity);
+      steeringForce.limit(MAX_STEERING_FORCE);
+    }
+
+    return steeringForce;
   }
 
   /*
