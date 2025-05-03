@@ -3,6 +3,7 @@
 // ---------------------
 
 const DOM_CANVAS = document.querySelector("canvas");
+const DOM_CLEAR_GRID_BUTTON = document.querySelector("#clear-grid-button");
 
 // ---------------------
 // Colors

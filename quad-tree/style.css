@@ -8,12 +8,42 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+  font-size: 1.2rem;
 }
 
 h1 {
-  font-size: 1.4rem;
+  font-size: 2rem;
 }
 
 button {
   padding: 2px;
+}
+
+#info-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+
+  color: #00ff00;
+}
+
+#info-container:hover #info-box {
+  display: flex;
+  flex-flow: column;
+}
+
+#info-box {
+  display: none;
+  color: black;
+  background: #00ff00ee;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+button:hover {
+  cursor: pointer;
 }

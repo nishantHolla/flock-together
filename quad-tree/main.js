@@ -18,6 +18,10 @@ function setup() {
   region = new Region();
   regionIsDragged = false;
   regionIsScaled = false;
+
+  DOM_CLEAR_GRID_BUTTON.addEventListener("click", () => {
+    particles = [];
+  })
 }
 
 /*
@@ -84,6 +88,10 @@ function mouseDragged() {
     const mousePosition = createVector(mouseX, mouseY);
     const d = p5.Vector.dist(mousePosition, region.center);
     region.radius = d;
+  }
+  else {
+    const mousePosition = createVector(mouseX, mouseY);
+    particles.push(new Particle(mousePosition));
   }
 }
 
